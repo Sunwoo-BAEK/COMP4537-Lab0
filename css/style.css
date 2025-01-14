@@ -1,0 +1,23 @@
+.main-container {
+    display: grid;
+    width: 100vw;
+    grid-template-rows: 100px calc(100vh - 100px);
+}
+
+#box-container {
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
+
+.box {
+    width: 10em;
+    height: 5em;
+    background-color:khaki;
+    border: 1px solid black;
+    margin-right: 10px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
