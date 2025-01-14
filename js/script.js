@@ -1,3 +1,5 @@
+import userMessages from "../lang/messages/en/user.js";
+
 class Box {
     constructor(color, x, y, number) {
         this.color = color;
@@ -7,13 +9,12 @@ class Box {
         this.element = null; // DOM element
     }
 
-    // explain function
     render(container) {
         this.element = document.createElement("section");
         this.element.className = "box";
         this.element.style.backgroundColor = this.color;
-        this.element.style.left = `${this.x}px`; // what is this?
-        this.element.style.top = `${this.y}px`; // what is this?
+        this.element.style.left = `${this.x}px`;
+        this.element.style.top = `${this.y}px`;
         this.element.textContent = this.number;
         container.appendChild(this.element);
     }
@@ -90,7 +91,6 @@ class Game {
                     const x = Math.random() * (container.offsetWidth - (10 * 16));
                     const y = Math.random() * (container.offsetHeight - (10 * 16));
                     box.updatePosition(x, y);
-                    console.log("Position updated for box: "+box.number);
                     if (i == this.n-1) { // last shuffle
                         setTimeout(() => this.afterShuffle(), 1000);
                     }
@@ -103,17 +103,14 @@ class Game {
         if (!this.clickable || this.gameOver) return;
 
         if (box.number == this.correctOrder[this.currentIndex]) {
-            console.log("That's one correct!")
             box.showNumber();
             this.currentIndex++;
             if (this.currentIndex == this.correctOrder.length) {
-                alert("Excellent memory!");
+                alert(userMessages.win);
                 this.gameOver = true;
             }
         } else {
-            alert("Wrong order!");
-            console.log("current order vs box number: "+this.correctOrder[this.currentIndex]+" vs "+box.number);
-            console.log("Correct order: "+this.correctOrder)
+            alert(userMessages.lose);
             this.revealBoxNumbers();
             this.gameOver = true;
         }
@@ -135,6 +132,9 @@ class UI {
         this.container = document.querySelector("#box-container");
         this.input = document.querySelector("#input");
         this.button = document.querySelector("#button");
+        document.querySelector("title").textContent = userMessages.title;
+        document.querySelector("#prompt").textContent = userMessages.prompt;
+        document.querySelector("#button").textContent = userMessages.button;
     }
 
     initialize() {
@@ -145,7 +145,7 @@ class UI {
     startGame() {
         const n = parseInt(this.input.value);
         if (isNaN(n) || n < 3 || n > 7) {
-            alert("Number must be between 3 and 7.");
+            alert(userMessages.outOfBounds);
             return;
         }
         const game = new Game(n);
