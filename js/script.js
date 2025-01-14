@@ -18,13 +18,18 @@ class Box {
         container.appendChild(this.element);
     }
 
+    showNumber() {
+        if (this.element) {
+            this.element.textContent = this.number;
+        }
+    }
+
     hideNumber() {
         if (this.element) {
             this.element.textContent = "";
         }
     }
 
-    // explain function
     updatePosition(x,y) {
         this.x = x;
         this.y = y;
@@ -39,6 +44,13 @@ class Game {
     constructor(n) {
         this.n = n;
         this.boxes = [];
+        this.gameOver = false;
+        this.clickable = false;
+        this.correctOrder = [];
+        this.currentIndex = 0;
+        for (let i = 0; i < n; i++) {
+            this.correctOrder[i] = i+1;
+        }
     }
 
     createBoxes(container) {
@@ -54,6 +66,7 @@ class Game {
             const box = new Box(color, x, y, i + 1);
     
             box.render(container);
+            box.element.addEventListener("click", () => this.handleBoxClick(box));
             this.boxes.push(box);
         }
     }
@@ -78,16 +91,41 @@ class Game {
                     const y = Math.random() * (container.offsetHeight - (10 * 16));
                     box.updatePosition(x, y);
                     console.log("Position updated for box: "+box.number);
-                    if (i == this.n-1) {
-                        setTimeout(() => this.hideBoxNumbers(), 1000);
+                    if (i == this.n-1) { // last shuffle
+                        setTimeout(() => this.afterShuffle(), 1000);
                     }
                 })
             }, i * 2000);
         }
     }
 
-    hideBoxNumbers() {
+    handleBoxClick(box) {
+        if (!this.clickable || this.gameOver) return;
+
+        if (box.number == this.correctOrder[this.currentIndex]) {
+            console.log("That's one correct!")
+            box.showNumber();
+            this.currentIndex++;
+            if (this.currentIndex == this.correctOrder.length) {
+                alert("Excellent memory!");
+                this.gameOver = true;
+            }
+        } else {
+            alert("Wrong order!");
+            console.log("current order vs box number: "+this.correctOrder[this.currentIndex]+" vs "+box.number);
+            console.log("Correct order: "+this.correctOrder)
+            this.revealBoxNumbers();
+            this.gameOver = true;
+        }
+    }
+
+    afterShuffle() {
         this.boxes.forEach((box) => box.hideNumber());
+        this.clickable = true;
+    }
+
+    revealBoxNumbers() {
+        this.boxes.forEach((box) => box.showNumber());
     }
 }
 
