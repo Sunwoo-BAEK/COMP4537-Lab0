@@ -6,5 +6,3 @@ const userMessages = {
     outOfBounds: "Number must be between 3 and 7.",
     win: "Excellent memory!",
 };
-
-export default userMessages;

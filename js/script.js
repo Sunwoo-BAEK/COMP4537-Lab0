@@ -1,5 +1,3 @@
-import userMessages from "../lang/messages/en/user.js";
-
 class Box {
     constructor(color, x, y, number) {
         this.color = color;
